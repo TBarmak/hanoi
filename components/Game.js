@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
+import Pegs from '../components/Pegs'
+
+const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
+
+const baseWidth = screenWidth / 4
+const baseHeight = screenHeight / 8
+const pegHeight = screenHeight * 0.6
+const pegTop = screenHeight * 0.3
+const pegXVals = [0.2 * screenWidth, 0.5 * screenWidth, 0.8 * screenWidth]
 
 export default function Game() {
     const [numChips, setNumChips] = useState(4) // This will be inherited from props later on
@@ -32,6 +42,9 @@ export default function Game() {
 
     return (
         <View style={styles.container}>
+            <View style={{position: "absolute", top: 0, left: 0, zIndex: -1}}>
+                <Pegs positions={pegXVals} baseWidth={baseWidth} baseHeight={baseHeight} pegHeight={pegHeight} pegTop={pegTop}/>
+            </View>
             {renderDiscs()}
         </View>
     );
