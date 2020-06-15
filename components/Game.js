@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Animated } from 'react-native';
 import Pegs from '../components/Pegs'
 
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -10,6 +10,8 @@ const baseHeight = screenHeight / 8
 const pegHeight = screenHeight * 0.6
 const pegTop = screenHeight * 0.3
 const pegXVals = [0.2 * screenWidth, 0.5 * screenWidth, 0.8 * screenWidth]
+const baseYVal = pegTop + pegHeight - baseHeight
+const colors = ["#FF0000", "#FF6500", "#FFA500", "#FFFF00", "#ADFF2F", "#32CD32", "#008000", "#0000FF", "#4B0082", "#EE82EE"]
 
 export default function Game() {
     const [numChips, setNumChips] = useState(4) // This will be inherited from props later on
@@ -21,11 +23,32 @@ export default function Game() {
     useEffect(() => createDiscs(), [numChips])
 
     function createDiscs() {
-        // TODO: Implement the createDiscs() function to create the discs based on numChips
+        /*
+        createDiscs() creates the objects to represent the discs and sets the discs state to have all of these objects
+        in the first position (on the first peg). A disc object has a width (number), height (number), color (hex), and 
+        position (Animated.ValueXY).
+        */
+        let stack = []
+        for(let i = 0; i < numChips; i++) {
+            let discWidth = baseWidth * ((numChips - (3*i/4)) / (numChips + 1))
+            let discHeight = (pegHeight - baseHeight) / (numChips + 1)
+            stack.push({width: discWidth, height: discHeight, color: colors[i % colors.length], position: new Animated.ValueXY({x: pegXVals[0] - (discWidth/2), y: baseYVal - discHeight * (i + 1)})})
+        }
+        setDiscs([stack, [], []])
     }
 
     function renderDiscs() {
-        // TODO: Implement the renderDiscs() function to return Animated Views for the discs
+        /*
+        renderDiscs() returns Animated.Views to represent the discs. It maps the objects in the discs state to Animated.Views
+        with the height, width, color, and position contained in the object.
+        */
+        return discs.map((stack) => {
+            return stack.map((disc) => {
+                return (
+                    <Animated.View style={{position: "absolute", width: disc.width, height: disc.height, backgroundColor: disc.color, ...disc.position.getLayout(), borderRadius: disc.height / 2}}/>
+                )
+            })
+        })
     }
 
     function lift(stackIndex) {
