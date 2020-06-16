@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing } from 'react-native';
+import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing, Image} from 'react-native';
 import Pegs from '../components/Pegs'
 
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -19,6 +19,7 @@ export default function Game() {
     const [lifted, setLifted] = useState(null)
     const [blocked, setBlocked] = useState(false)
     const [redFlash, setRedFlash] = useState(-1)
+    const [won, setWon] = useState(false)
 
     useEffect(() => createDiscs(), [numChips])
 
@@ -102,8 +103,13 @@ export default function Game() {
                         duration: 100
                     }
                 ).start(() => {
-                    setBlocked(false)
                     setLifted(null)
+                    if(discs[1].length === numChips || discs[2].length === numChips) {
+                        setWon(true)
+                        setBlocked(true)
+                    } else {
+                        setBlocked(false)
+                    }
                 })
             })
         }
@@ -123,6 +129,7 @@ export default function Game() {
             <View style={{ position: "absolute", top: 0, left: 0, zIndex: -1 }}>
                 <Pegs positions={pegXVals} baseWidth={baseWidth} baseHeight={baseHeight} pegHeight={pegHeight} pegTop={pegTop} />
             </View>
+            {won ? <Image source={require('../assets/confetti.gif')} style={{width: "100%", height: "100%"}}/> : null }
             {renderDiscs()}
             {pegXVals.map((pegX, index) => {
                 return <TouchableOpacity
