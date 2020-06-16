@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions, Animated } from 'react-native';
+import { StyleSheet, View, Dimensions, Animated, TouchableOpacity } from 'react-native';
 import Pegs from '../components/Pegs'
 
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -15,7 +15,7 @@ const colors = ["#FF0000", "#FF6500", "#FFA500", "#FFFF00", "#ADFF2F", "#32CD32"
 
 export default function Game() {
     const [numChips, setNumChips] = useState(4) // This will be inherited from props later on
-    const [discs, setDiscs] = useState([[],[],[]])
+    const [discs, setDiscs] = useState([[], [], []])
     const [lifted, setLifted] = useState(null)
     const [blocked, setBlocked] = useState(false)
     const [redFlash, setRedFlash] = useState(-1)
@@ -29,10 +29,10 @@ export default function Game() {
         position (Animated.ValueXY).
         */
         let stack = []
-        for(let i = 0; i < numChips; i++) {
-            let discWidth = baseWidth * ((numChips - (3*i/4)) / (numChips + 1))
+        for (let i = 0; i < numChips; i++) {
+            let discWidth = baseWidth * ((numChips - (3 * i / 4)) / (numChips + 1))
             let discHeight = (pegHeight - baseHeight) / (numChips + 1)
-            stack.push({width: discWidth, height: discHeight, color: colors[i % colors.length], position: new Animated.ValueXY({x: pegXVals[0] - (discWidth/2), y: baseYVal - discHeight * (i + 1)})})
+            stack.push({ width: discWidth, height: discHeight, color: colors[i % colors.length], position: new Animated.ValueXY({ x: pegXVals[0] - (discWidth / 2), y: baseYVal - discHeight * (i + 1) }) })
         }
         setDiscs([stack, [], []])
     }
@@ -45,7 +45,7 @@ export default function Game() {
         return discs.map((stack) => {
             return stack.map((disc) => {
                 return (
-                    <Animated.View style={{position: "absolute", width: disc.width, height: disc.height, backgroundColor: disc.color, ...disc.position.getLayout(), borderRadius: disc.height / 2}}/>
+                    <Animated.View style={{ position: "absolute", width: disc.width, height: disc.height, backgroundColor: disc.color, ...disc.position.getLayout(), borderRadius: disc.height / 2 }} />
                 )
             })
         })
@@ -65,10 +65,25 @@ export default function Game() {
 
     return (
         <View style={styles.container}>
-            <View style={{position: "absolute", top: 0, left: 0, zIndex: -1}}>
-                <Pegs positions={pegXVals} baseWidth={baseWidth} baseHeight={baseHeight} pegHeight={pegHeight} pegTop={pegTop}/>
+            <View style={{ position: "absolute", top: 0, left: 0, zIndex: -1 }}>
+                <Pegs positions={pegXVals} baseWidth={baseWidth} baseHeight={baseHeight} pegHeight={pegHeight} pegTop={pegTop} />
             </View>
             {renderDiscs()}
+            {pegXVals.map((pegX, index) => {
+                return <TouchableOpacity
+                    style={{ position: "absolute", width: baseWidth, height: pegHeight, top: pegTop, left: pegX - (baseWidth / 2)}}
+                    onPress={() => {
+                        if (!blocked) {
+                            if (lifted === null) {
+                                setBlocked(true)
+                                lift(index)
+                            } else {
+                                setBlocked(true)
+                                drop(index)
+                            }
+                        }
+                    }} />
+            })}
         </View>
     );
 }
