@@ -52,6 +52,10 @@ export default function Game() {
     }
 
     function lift(stackIndex) {
+        /*
+        lift(stackIndex) animates the lifting of the disc on top of the chosen stack and sets the 
+        lifted state to stackIndex, if there is a disc on top of the chosen stack.
+        */
         if(discs[stackIndex].length === 0) {
             flash(stackIndex)
             setBlocked(false)
@@ -71,6 +75,10 @@ export default function Game() {
     }
 
     function drop(stackIndex) {
+        /*
+        drop(stackIndex) animates the moving and dropping of the lifted disc to the chosen stack (stackIndex) and 
+        sets the lifted state to null, if the disc on top of the chosen peg is larger than the lifted disc.
+        */
         let liftedDisc = discs[lifted][discs[lifted].length - 1]
         let topDisc = discs[stackIndex][discs[stackIndex].length - (1 + (lifted === stackIndex))]
         if(discs[stackIndex].length > 0 && topDisc && topDisc.width < liftedDisc.width) {
@@ -102,7 +110,12 @@ export default function Game() {
     }
 
     function flash(index) {
-        // TODO: Implement flash(index) function to make a stack flash red if a player attempt to make an illegal move
+        /*
+        flash(index) will make the Touchable Opacity of the provided index flash red for a short period of time
+        to indicate that an illegal move has been attempted.
+        */
+        setRedFlash(index)
+        setTimeout(() => setRedFlash(-1), 200)
     }
 
     return (
@@ -113,7 +126,7 @@ export default function Game() {
             {renderDiscs()}
             {pegXVals.map((pegX, index) => {
                 return <TouchableOpacity
-                    style={{ position: "absolute", width: baseWidth, height: pegHeight, top: pegTop, left: pegX - (baseWidth / 2)}}
+                    style={{ position: "absolute", width: baseWidth, height: pegHeight, top: pegTop, left: pegX - (baseWidth / 2), backgroundColor: redFlash === index ? "red" : "transparent", opacity: 0.4, borderRadius: baseHeight/4}}
                     onPress={() => {
                         if (!blocked) {
                             if (lifted === null) {
