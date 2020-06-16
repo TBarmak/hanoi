@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions, Animated, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing } from 'react-native';
 import Pegs from '../components/Pegs'
 
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -52,11 +52,53 @@ export default function Game() {
     }
 
     function lift(stackIndex) {
-        // TODO: Implement lift(stackIndex) function to lift a disc off of a stack
+        if(discs[stackIndex].length === 0) {
+            flash(stackIndex)
+            setBlocked(false)
+        } else {
+            disc = discs[stackIndex][discs[stackIndex].length - 1]
+            setLifted(stackIndex)
+            Animated.timing(
+                disc.position, {
+                    toValue: {x: pegXVals[stackIndex] - (disc.width/2), y: screenHeight * 0.1},
+                    easing: Easing.ease,
+                    duration: 100
+                }
+            ).start(() => {
+                setBlocked(false)
+            })
+        }
     }
 
     function drop(stackIndex) {
-        // TODO: Implement drop(stackIndex) function to drop a disc on a stack
+        let liftedDisc = discs[lifted][discs[lifted].length - 1]
+        let topDisc = discs[stackIndex][discs[stackIndex].length - (1 + (lifted === stackIndex))]
+        if(discs[stackIndex].length > 0 && topDisc && topDisc.width < liftedDisc.width) {
+            flash(stackIndex)
+            setBlocked(false)
+        } else {
+            discs[stackIndex].push(liftedDisc)
+            discs[lifted].pop()
+            Animated.timing(
+                liftedDisc.position, {
+                    toValue: {x: pegXVals[stackIndex] - (liftedDisc.width/2), y: screenHeight * 0.1},
+                    easing: Easing.ease,
+                    duration: 100
+                }
+            ).start(() => {
+                let targetY = (topDisc ? parseFloat(JSON.stringify(topDisc.position.getLayout().top)) : baseYVal) - liftedDisc.height
+                Animated.timing(
+                    liftedDisc.position, {
+                        toValue: {x: pegXVals[stackIndex] - (liftedDisc.width/2), y: targetY},
+                        easing: Easing.ease,
+                        duration: 100
+                    }
+                ).start(() => {
+                    setBlocked(false)
+                    setLifted(null)
+                })
+            })
+        }
     }
 
     function flash(index) {
