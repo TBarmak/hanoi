@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing, Image} from 'react-native';
 import Pegs from '../components/Pegs'
 
-const screenWidth = Math.round(Dimensions.get('window').width);
-const screenHeight = Math.round(Dimensions.get('window').height);
+const dim = Dimensions.get('window')
+const screenWidth = Math.round(Math.max(dim.width, dim.height));
+const screenHeight = Math.round(Math.min(dim.width, dim.height));
 
 const baseWidth = screenWidth / 4
 const baseHeight = screenHeight / 8
