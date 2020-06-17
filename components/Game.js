@@ -13,15 +13,18 @@ const pegXVals = [0.2 * screenWidth, 0.5 * screenWidth, 0.8 * screenWidth]
 const baseYVal = pegTop + pegHeight - baseHeight
 const colors = ["#FF0000", "#FF6500", "#FFA500", "#FFFF00", "#ADFF2F", "#32CD32", "#008000", "#0000FF", "#4B0082", "#EE82EE"]
 
-export default function Game() {
-    const [numChips, setNumChips] = useState(4) // This will be inherited from props later on
+export default function Game({route, navigation}) {
+    const [numDiscs, setNumDiscs] = useState(4) // This will be inherited from props later on
     const [discs, setDiscs] = useState([[], [], []])
     const [lifted, setLifted] = useState(null)
     const [blocked, setBlocked] = useState(false)
     const [redFlash, setRedFlash] = useState(-1)
     const [won, setWon] = useState(false)
 
-    useEffect(() => createDiscs(), [numChips])
+    useEffect(() => createDiscs(), [numDiscs])
+
+    const { number } = route.params
+    useEffect(() => setNumDiscs(number), [number])
 
     function createDiscs() {
         /*
@@ -30,9 +33,9 @@ export default function Game() {
         position (Animated.ValueXY).
         */
         let stack = []
-        for (let i = 0; i < numChips; i++) {
-            let discWidth = baseWidth * ((numChips - (3 * i / 4)) / (numChips + 1))
-            let discHeight = (pegHeight - baseHeight) / (numChips + 1)
+        for (let i = 0; i < numDiscs; i++) {
+            let discWidth = baseWidth * ((numDiscs - (3 * i / 4)) / (numDiscs + 1))
+            let discHeight = (pegHeight - baseHeight) / (numDiscs + 1)
             stack.push({ width: discWidth, height: discHeight, color: colors[i % colors.length], position: new Animated.ValueXY({ x: pegXVals[0] - (discWidth / 2), y: baseYVal - discHeight * (i + 1) }) })
         }
         setDiscs([stack, [], []])
@@ -104,7 +107,7 @@ export default function Game() {
                     }
                 ).start(() => {
                     setLifted(null)
-                    if(discs[1].length === numChips || discs[2].length === numChips) {
+                    if(discs[1].length === numDiscs || discs[2].length === numDiscs) {
                         setWon(true)
                         setBlocked(true)
                     } else {

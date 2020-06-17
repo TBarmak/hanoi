@@ -16,8 +16,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    peg: {
-        position: "absolute",
-        backgroundColor: "brown",
-    }
 });
