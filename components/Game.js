@@ -23,9 +23,22 @@ export default function Game({ route, navigation }) {
     const [redFlash, setRedFlash] = useState(-1)
     const [won, setWon] = useState(false)
 
-    const [useTimer, setUseTimer] = useState(true)
+    const [useTimer, setUseTimer] = useState(false)
     const [stopwatchRunning, setStopwatchRunning] = useState(false)
     const [time, setTime] = useState(0)
+
+    const [countMoves, setCountMoves] = useState(false)
+    const [numMoves, setNumMoves] = useState(0)
+
+    const { selected } = route.params
+
+    useEffect(() => {
+        if (selected === 1) {
+            setCountMoves(true)
+        } else if (selected == 2) {
+            setUseTimer(true)
+        }
+    }, [selected])
 
     useEffect(() => createDiscs(), [numDiscs])
 
@@ -100,6 +113,7 @@ export default function Game({ route, navigation }) {
         } else {
             discs[stackIndex].push(liftedDisc)
             discs[lifted].pop()
+            setNumMoves(numMoves => numMoves + 1)
             Animated.timing(
                 liftedDisc.position, {
                 toValue: { x: pegXVals[stackIndex] - (liftedDisc.width / 2), y: screenHeight * 0.1 },
@@ -141,6 +155,9 @@ export default function Game({ route, navigation }) {
         <View style={styles.container}>
             {useTimer ? <View style={{ position: "absolute", top: 0, left: 0, margin: 20 }}>
                 {stopwatchRunning || time > 0 ? <Stopwatch running={stopwatchRunning} setTime={setTime} time={time} /> : <Text>Time: 0:00.00</Text>}
+            </View> : null}
+            {countMoves ? <View style={{ position: "absolute", top: 0, left: 0, margin: 20 }}>
+                <Text>Moves: {numMoves}</Text>
             </View> : null}
             <View style={{ position: "absolute", top: 0, left: 0, zIndex: -1 }}>
                 <Pegs positions={pegXVals} baseWidth={baseWidth} baseHeight={baseHeight} pegHeight={pegHeight} pegTop={pegTop} />

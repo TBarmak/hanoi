@@ -11,14 +11,14 @@ export default function Settings({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <View style={{flexDirection: "row", justifyContent: "space-around"}}>
-                <NumberPicker number={number} setNumber={setNumber}/>
-                <RadioButtons options={options} selected={selected} setSelected={setSelected}/>
+            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+                <NumberPicker number={number} setNumber={setNumber} />
+                <RadioButtons options={options} selected={selected} setSelected={setSelected} />
             </View>
-            <TouchableOpacity 
-                style={{backgroundColor: "black", width: 100, height: 50, justifyContent: "center", alignItems: "center", margin: 10}}
-                onPress={() => navigation.navigate("Game", {number: number})}>
-                <Text style ={{color: "white"}}>Continue to game</Text>
+            <TouchableOpacity
+                style={{ backgroundColor: "black", width: 100, height: 50, justifyContent: "center", alignItems: "center", margin: 10 }}
+                onPress={() => navigation.navigate("Game", { number: number, selected: selected })}>
+                <Text style={{ color: "white" }}>Continue to game</Text>
             </TouchableOpacity>
         </View>
     );
