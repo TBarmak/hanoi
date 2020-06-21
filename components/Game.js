@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing, Image} from 'react-native';
+import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing, Image, Text } from 'react-native';
 import Pegs from '../components/Pegs'
+import Stopwatch from './Stopwatch';
 
 const dim = Dimensions.get('window')
 const screenWidth = Math.round(Math.max(dim.width, dim.height));
@@ -14,13 +15,17 @@ const pegXVals = [0.2 * screenWidth, 0.5 * screenWidth, 0.8 * screenWidth]
 const baseYVal = pegTop + pegHeight - baseHeight
 const colors = ["#FF0000", "#FF6500", "#FFA500", "#FFFF00", "#ADFF2F", "#32CD32", "#008000", "#0000FF", "#4B0082", "#EE82EE"]
 
-export default function Game({route, navigation}) {
-    const [numDiscs, setNumDiscs] = useState(4) // This will be inherited from props later on
+export default function Game({ route, navigation }) {
+    const [numDiscs, setNumDiscs] = useState(4)
     const [discs, setDiscs] = useState([[], [], []])
     const [lifted, setLifted] = useState(null)
     const [blocked, setBlocked] = useState(false)
     const [redFlash, setRedFlash] = useState(-1)
     const [won, setWon] = useState(false)
+
+    const [useTimer, setUseTimer] = useState(true)
+    const [stopwatchRunning, setStopwatchRunning] = useState(false)
+    const [time, setTime] = useState(0)
 
     useEffect(() => createDiscs(), [numDiscs])
 
@@ -61,18 +66,21 @@ export default function Game({route, navigation}) {
         lift(stackIndex) animates the lifting of the disc on top of the chosen stack and sets the 
         lifted state to stackIndex, if there is a disc on top of the chosen stack.
         */
-        if(discs[stackIndex].length === 0) {
+        if (discs[stackIndex].length === 0) {
             flash(stackIndex)
             setBlocked(false)
         } else {
+            if (!stopwatchRunning) {
+                setStopwatchRunning(true)
+            }
             disc = discs[stackIndex][discs[stackIndex].length - 1]
             setLifted(stackIndex)
             Animated.timing(
                 disc.position, {
-                    toValue: {x: pegXVals[stackIndex] - (disc.width/2), y: screenHeight * 0.1},
-                    easing: Easing.ease,
-                    duration: 100
-                }
+                toValue: { x: pegXVals[stackIndex] - (disc.width / 2), y: screenHeight * 0.1 },
+                easing: Easing.ease,
+                duration: 100
+            }
             ).start(() => {
                 setBlocked(false)
             })
@@ -86,7 +94,7 @@ export default function Game({route, navigation}) {
         */
         let liftedDisc = discs[lifted][discs[lifted].length - 1]
         let topDisc = discs[stackIndex][discs[stackIndex].length - (1 + (lifted === stackIndex))]
-        if(discs[stackIndex].length > 0 && topDisc && topDisc.width < liftedDisc.width) {
+        if (discs[stackIndex].length > 0 && topDisc && topDisc.width < liftedDisc.width) {
             flash(stackIndex)
             setBlocked(false)
         } else {
@@ -94,23 +102,24 @@ export default function Game({route, navigation}) {
             discs[lifted].pop()
             Animated.timing(
                 liftedDisc.position, {
-                    toValue: {x: pegXVals[stackIndex] - (liftedDisc.width/2), y: screenHeight * 0.1},
-                    easing: Easing.ease,
-                    duration: 100
-                }
+                toValue: { x: pegXVals[stackIndex] - (liftedDisc.width / 2), y: screenHeight * 0.1 },
+                easing: Easing.ease,
+                duration: 100
+            }
             ).start(() => {
                 let targetY = (topDisc ? parseFloat(JSON.stringify(topDisc.position.getLayout().top)) : baseYVal) - liftedDisc.height
                 Animated.timing(
                     liftedDisc.position, {
-                        toValue: {x: pegXVals[stackIndex] - (liftedDisc.width/2), y: targetY},
-                        easing: Easing.ease,
-                        duration: 100
-                    }
+                    toValue: { x: pegXVals[stackIndex] - (liftedDisc.width / 2), y: targetY },
+                    easing: Easing.ease,
+                    duration: 100
+                }
                 ).start(() => {
                     setLifted(null)
-                    if(discs[1].length === numDiscs || discs[2].length === numDiscs) {
+                    if (discs[1].length === numDiscs || discs[2].length === numDiscs) {
                         setWon(true)
                         setBlocked(true)
+                        setStopwatchRunning(false)
                     } else {
                         setBlocked(false)
                     }
@@ -130,14 +139,17 @@ export default function Game({route, navigation}) {
 
     return (
         <View style={styles.container}>
+            {useTimer ? <View style={{ position: "absolute", top: 0, left: 0, margin: 20 }}>
+                {stopwatchRunning || time > 0 ? <Stopwatch running={stopwatchRunning} setTime={setTime} time={time} /> : <Text>Time: 0:00.00</Text>}
+            </View> : null}
             <View style={{ position: "absolute", top: 0, left: 0, zIndex: -1 }}>
                 <Pegs positions={pegXVals} baseWidth={baseWidth} baseHeight={baseHeight} pegHeight={pegHeight} pegTop={pegTop} />
             </View>
-            {won ? <Image source={require('../assets/confetti.gif')} style={{width: "100%", height: "100%"}}/> : null }
+            {won ? <Image source={require('../assets/confetti.gif')} style={{ width: "100%", height: "100%" }} /> : null}
             {renderDiscs()}
             {pegXVals.map((pegX, index) => {
                 return <TouchableOpacity
-                    style={{ position: "absolute", width: baseWidth, height: pegHeight, top: pegTop, left: pegX - (baseWidth / 2), backgroundColor: redFlash === index ? "red" : "transparent", opacity: 0.4, borderRadius: baseHeight/4}}
+                    style={{ position: "absolute", width: baseWidth, height: pegHeight, top: pegTop, left: pegX - (baseWidth / 2), backgroundColor: redFlash === index ? "red" : "transparent", opacity: 0.4, borderRadius: baseHeight / 4 }}
                     onPress={() => {
                         if (!blocked) {
                             if (lifted === null) {
