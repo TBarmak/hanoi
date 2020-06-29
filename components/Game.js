@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing, Image, Text } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import Pegs from '../components/Pegs'
 import Stopwatch from './Stopwatch';
 
@@ -16,7 +17,7 @@ const baseYVal = pegTop + pegHeight - baseHeight
 const colors = ["#FF0000", "#FF6500", "#FFA500", "#FFFF00", "#ADFF2F", "#32CD32", "#008000", "#0000FF", "#4B0082", "#EE82EE"]
 
 export default function Game({ route, navigation }) {
-    const [numDiscs, setNumDiscs] = useState(4)
+    const [numDiscs, setNumDiscs] = useState(2)
     const [discs, setDiscs] = useState([[], [], []])
     const [lifted, setLifted] = useState(null)
     const [blocked, setBlocked] = useState(false)
@@ -30,6 +31,8 @@ export default function Game({ route, navigation }) {
     const [countMoves, setCountMoves] = useState(false)
     const [numMoves, setNumMoves] = useState(0)
 
+    const [best, setBest] = useState([])
+
     const { selected } = route.params
 
     useEffect(() => {
@@ -40,10 +43,19 @@ export default function Game({ route, navigation }) {
         }
     }, [selected])
 
-    useEffect(() => createDiscs(), [numDiscs])
+    useEffect(() => {
+        createDiscs()
+        if (countMoves || useTimer) {
+            getBestFromStorage()
+        }
+    }, [numDiscs])
 
     const { number } = route.params
     useEffect(() => setNumDiscs(number), [number])
+
+    useEffect(() => {
+        setBestInStorage()
+    }, [best])
 
     function createDiscs() {
         /*
@@ -83,6 +95,7 @@ export default function Game({ route, navigation }) {
             flash(stackIndex)
             setBlocked(false)
         } else {
+            setNumMoves(numMoves => numMoves + 1)
             if (!stopwatchRunning) {
                 setStopwatchRunning(true)
             }
@@ -113,7 +126,6 @@ export default function Game({ route, navigation }) {
         } else {
             discs[stackIndex].push(liftedDisc)
             discs[lifted].pop()
-            setNumMoves(numMoves => numMoves + 1)
             Animated.timing(
                 liftedDisc.position, {
                 toValue: { x: pegXVals[stackIndex] - (liftedDisc.width / 2), y: screenHeight * 0.1 },
@@ -134,6 +146,7 @@ export default function Game({ route, navigation }) {
                         setWon(true)
                         setBlocked(true)
                         setStopwatchRunning(false)
+                        updateBest()
                     } else {
                         setBlocked(false)
                     }
@@ -149,6 +162,40 @@ export default function Game({ route, navigation }) {
         */
         setRedFlash(index)
         setTimeout(() => setRedFlash(-1), 200)
+    }
+
+    async function getBestFromStorage() {
+        /*
+        getBestFromStorage() will use AsyncStorage to fetch the player's best score for the current number of 
+        discs, and update the "best" state. The best score is a list with two elements: the first is the lowest 
+        number of moves that the player has solved the puzzle in, and the second is the best time (in hundredths) 
+        that the player has solved the puzzle in. 
+        */
+        let val = await AsyncStorage.getItem('best' + numDiscs)
+        let asJSON = JSON.parse(val)
+        if (val === null) {
+            setBest([null, null])
+        } else {
+            setBest(asJSON)
+        }
+    }
+
+    async function setBestInStorage() {
+        /*
+        setBestInStorage() will update the storage with the new best score for the player.
+        */
+        await AsyncStorage.setItem('best' + numDiscs, JSON.stringify(best))
+    }
+
+    function updateBest() {
+        /*
+        updateBest() will update the "best" state if the user beat their best time or lowest number of moves
+        */
+        if (countMoves && (best[0] === null || numMoves < best[0])) {
+            setBest([numMoves, best[1]])
+        } else if (useTimer && (best[1] === null || time < best[1])) {
+            setBest([best[0], time])
+        }
     }
 
     return (

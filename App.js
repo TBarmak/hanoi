@@ -6,6 +6,7 @@ import Game from './components/Game';
 import Home from './components/Home';
 import Tutorial from './components/Tutorial';
 import Settings from './components/Settings';
+import Achievements from './components/Achievements';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
         <Stack.Screen name="Game" component={Game} />
         <Stack.Screen name="Tutorial" component={Tutorial} />
         <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="Achievements" component={Achievements} />
       </Stack.Navigator>
     </NavigationContainer>
   );

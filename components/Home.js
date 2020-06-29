@@ -4,15 +4,20 @@ import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 export default function Home({ navigation }) {
     return (
         <View style={styles.container}>
-            <TouchableOpacity 
-                style={{backgroundColor: "black", width: 100, height: 50, justifyContent: "center", alignItems: "center", margin: 10}}
+            <TouchableOpacity
+                style={{ backgroundColor: "black", width: 200, height: 50, justifyContent: "center", alignItems: "center", margin: 10 }}
                 onPress={() => navigation.navigate("Settings")}>
-                <Text style ={{color: "white"}}>Play</Text>
+                <Text style={{ color: "white" }}>Play</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-                style={{backgroundColor: "black", width: 100, height: 50, justifyContent: "center", alignItems: "center", margin: 10}}
+            <TouchableOpacity
+                style={{ backgroundColor: "black", width: 200, height: 50, justifyContent: "center", alignItems: "center", margin: 10 }}
                 onPress={() => navigation.navigate("Tutorial")}>
-                <Text style ={{color: "white"}}>Tutorial</Text>
+                <Text style={{ color: "white" }}>Tutorial</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{ backgroundColor: "black", width: 200, height: 50, justifyContent: "center", alignItems: "center", margin: 10 }}
+                onPress={() => navigation.navigate("Achievements")}>
+                <Text style={{ color: "white" }}>Achievements</Text>
             </TouchableOpacity>
         </View>
     );
