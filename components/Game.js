@@ -33,7 +33,7 @@ export default function Game({ route, navigation }) {
     const [countMoves, setCountMoves] = useState(false)
     const [numMoves, setNumMoves] = useState(0)
 
-    const [best, setBest] = useState([])
+    const [best, setBest] = useState([null, null])
 
     const { selected } = route.params
 
@@ -175,9 +175,7 @@ export default function Game({ route, navigation }) {
         */
         let val = await AsyncStorage.getItem('best' + numDiscs)
         let asJSON = JSON.parse(val)
-        if (val === null) {
-            setBest([null, null])
-        } else {
+        if (val !== null) {
             setBest(asJSON)
         }
     }
@@ -186,17 +184,19 @@ export default function Game({ route, navigation }) {
         /*
         setBestInStorage() will update the storage with the new best score for the player.
         */
-        await AsyncStorage.setItem('best' + numDiscs, JSON.stringify(best))
+        if(best[0] !== null || best[1] !== null) {
+            await AsyncStorage.setItem('best' + numDiscs, JSON.stringify(best))
+        }
     }
 
     function updateBest() {
         /*
         updateBest() will update the "best" state if the user beat their best time or lowest number of moves
         */
-        if (countMoves && (best[0] === null || numMoves < best[0])) {
-            setBest([numMoves, best[1]])
-        } else if (useTimer && (best[1] === null || time < best[1])) {
-            setBest([best[0], time])
+        if (countMoves && (best[0] === null || numMoves < parseFloat(best[0]))) {
+            setBest([numMoves, parseFloat(best[1])])
+        } else if (useTimer && (best[1] === null || time < parseFloat(best[1]))) {
+            setBest([parseFloat(best[0]), time])
         }
     }
 
