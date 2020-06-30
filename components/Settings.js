@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import Constants from 'expo-constants';
 import NumberPicker from './NumberPicker';
 import RadioButtons from './RadioButtons';
+import BackButton from './BackButton';
 
 const options = ['Zen Mode', 'Count Moves', 'Timed']
 
@@ -11,6 +13,9 @@ export default function Settings({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <View style={styles.header}>
+                <BackButton navigation={navigation} />
+            </View>
             <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
                 <NumberPicker number={number} setNumber={setNumber} />
                 <RadioButtons options={options} selected={selected} setSelected={setSelected} />
@@ -30,5 +35,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    header: {
+        zIndex: 2,
+        position: "absolute",
+        top: Constants.statusBarHeight,
+        left: 0, flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start"
     }
 });

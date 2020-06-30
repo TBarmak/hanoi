@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
+import BackButton from './BackButton';
 
 const dim = Dimensions.get('window')
 const screenWidth = Math.round(Math.max(dim.width, dim.height));
@@ -51,6 +52,9 @@ export default function Achievements({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <View style={styles.header}>
+                <BackButton navigation={navigation} />
+            </View>
             <View style={styles.flatListContainer}>
                 <View style={styles.rowContainer}>
                     <View style={styles.numberCell}>
@@ -81,6 +85,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'flex-start',
+    },
+    header: {
+        zIndex: 2,
+        position: "absolute",
+        top: Constants.statusBarHeight,
+        left: 0, flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start"
     },
     flatListContainer: {
         top: Constants.statusBarHeight,

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing, Image, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import Pegs from '../components/Pegs'
+import Constants from 'expo-constants';
+import Pegs from './Pegs'
 import Stopwatch from './Stopwatch';
+import BackButton from './BackButton';
 
 const dim = Dimensions.get('window')
 const screenWidth = Math.round(Math.max(dim.width, dim.height));
@@ -200,12 +202,11 @@ export default function Game({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-            {useTimer ? <View style={{ position: "absolute", top: 0, left: 0, margin: 20 }}>
-                {stopwatchRunning || time > 0 ? <Stopwatch running={stopwatchRunning} setTime={setTime} time={time} /> : <Text>Time: 0:00.00</Text>}
-            </View> : null}
-            {countMoves ? <View style={{ position: "absolute", top: 0, left: 0, margin: 20 }}>
-                <Text>Moves: {numMoves}</Text>
-            </View> : null}
+            <View style={styles.header}>
+                <BackButton navigation={navigation} />
+                {useTimer ? stopwatchRunning || time > 0 ? <Stopwatch running={stopwatchRunning} setTime={setTime} time={time} /> : <Text>Time: 0:00.00</Text> : null}
+                {countMoves ? <Text>Moves: {numMoves}</Text> : null}
+            </View>
             <View style={{ position: "absolute", top: 0, left: 0, zIndex: -1 }}>
                 <Pegs positions={pegXVals} baseWidth={baseWidth} baseHeight={baseHeight} pegHeight={pegHeight} pegTop={pegTop} />
             </View>
@@ -237,4 +238,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    header: {
+        zIndex: 2,
+        position: "absolute",
+        top: Constants.statusBarHeight,
+        left: 0, flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start"
+    }
 });
