@@ -38,7 +38,7 @@ export default function Achievements({ navigation }) {
                 </View>
                 <View style={styles.scoresContainer}>
                     <View style={styles.scoreContainer}>
-                        <Text style={styles.scoreText}>{item.data === null ? "" : item.data[0]}</Text>
+                        <Text style={{...styles.scoreText, color: item.data !== null && item.data[0] === Math.pow(2, item.id) - 1 ? "#0F0" : "black"}}>{item.data === null ? "" : item.data[0]}</Text>
                     </View>
                     <View style={styles.scoreContainer}>
                         {time === null ?
