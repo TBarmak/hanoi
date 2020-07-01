@@ -35,6 +35,73 @@ export default function Game({ route, navigation }) {
 
     const [best, setBest] = useState([null, null])
 
+    const [boxTop, setBoxTop] = useState(new Animated.Value(50))
+    const [boxLeft, setBoxLeft] = useState(new Animated.Value(50))
+    const [boxWidth, setBoxWidth] = useState(new Animated.Value(50))
+    const [boxHeight, setBoxHeight] = useState(new Animated.Value(50))
+
+    const [tutorialIndex, setTutorialIndex] = useState(-1)
+
+    const { tutorial } = route.params
+
+    useEffect(() => {
+        if (tutorial) {
+            setTutorialIndex(0)
+        }
+    }, [tutorial])
+
+    const tutorialText = [
+        'one',
+        'two',
+        'three',
+        'four',
+        'five',
+        'six'
+    ]
+
+    // Takes the form [top, left, height, width]
+    const boxes = [
+        [pegTop, pegXVals[0] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth + pegXVals[2] - pegXVals[1]],
+        [30, 60, 100, 200],
+        [10, 10, 10, 10],
+        [50, 50, 40, 40],
+        [30, 60, 100, 200],
+    ]
+
+    useEffect(() => {
+        if (tutorialIndex >= 0) {
+            Animated.timing(
+                boxTop, {
+                toValue: boxes[tutorialIndex][0],
+                duration: 500,
+                easing: Easing.ease
+            }
+            ).start()
+            Animated.timing(
+                boxLeft, {
+                toValue: boxes[tutorialIndex][1],
+                duration: 500,
+                easing: Easing.ease
+            }
+            ).start()
+            Animated.timing(
+                boxHeight, {
+                toValue: boxes[tutorialIndex][2],
+                duration: 500,
+                easing: Easing.ease
+            }
+            ).start()
+            Animated.timing(
+                boxWidth, {
+                toValue: boxes[tutorialIndex][3],
+                duration: 500,
+                easing: Easing.ease
+            }
+            ).start()
+        }
+    }, [tutorialIndex])
+
     const { selected } = route.params
 
     useEffect(() => {
@@ -184,7 +251,7 @@ export default function Game({ route, navigation }) {
         /*
         setBestInStorage() will update the storage with the new best score for the player.
         */
-        if(best[0] !== null || best[1] !== null) {
+        if (best[0] !== null || best[1] !== null) {
             await AsyncStorage.setItem('best' + numDiscs, JSON.stringify(best))
         }
     }
@@ -207,6 +274,29 @@ export default function Game({ route, navigation }) {
                 {useTimer ? stopwatchRunning || time > 0 ? <Stopwatch running={stopwatchRunning} setTime={setTime} time={time} /> : <Text>Time: 0:00.00</Text> : null}
                 {countMoves ? <Text>Moves: {numMoves}</Text> : null}
             </View>
+
+            {tutorialIndex >= 0 && tutorialIndex < boxes.length - 1 ? <View style={{ position: "absolute", top: 0, left: 0 }}>
+                <Animated.View style={{ ...styles.windowView, top: 0, left: 0, width: Animated.add(boxLeft, boxWidth), height: boxTop }} />
+                <Animated.View style={{ ...styles.windowView, top: boxTop, left: 0, width: boxLeft, height: screenHeight }} />
+                <Animated.View style={{ ...styles.windowView, top: 0, left: Animated.add(boxLeft, boxWidth), width: screenWidth, height: Animated.add(boxHeight, boxTop) }} />
+                <Animated.View style={{ ...styles.windowView, top: Animated.add(boxTop, boxHeight), left: boxLeft, width: screenWidth, height: screenHeight }} />
+            </View> : null}
+            {tutorialIndex >= 0 && tutorialIndex < boxes.length - 1 ?
+                <View style={{ position: "absolute", zIndex: 2, flexDirection: "column", top: screenHeight * 0.6 }}>
+                    <View style={{ justifyContent: "center", alignItems: "center" }}>
+                        <Text style={styles.tutorialText}>{tutorialText[tutorialIndex]}</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                        {tutorialIndex > 0 ?
+                            <TouchableOpacity onPress={() => setTutorialIndex(index => index - 1)} style={styles.tutorialButton}>
+                                <Text style={styles.tutorialButtonText}>Back</Text>
+                            </TouchableOpacity> : null}
+                        <TouchableOpacity onPress={() => setTutorialIndex(index => index + 1)} style={styles.tutorialButton}>
+                            <Text style={styles.tutorialButtonText}>Okay</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View> : null}
+
             <View style={{ position: "absolute", top: 0, left: 0, zIndex: -1 }}>
                 <Pegs positions={pegXVals} baseWidth={baseWidth} baseHeight={baseHeight} pegHeight={pegHeight} pegTop={pegTop} />
             </View>
@@ -245,5 +335,28 @@ const styles = StyleSheet.create({
         left: 0, flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-start"
+    },
+    windowView: {
+        zIndex: 1,
+        position: "absolute",
+        backgroundColor: "#333",
+        opacity: 0.4
+    },
+    tutorialButton: {
+        justifyContent: "center",
+        alignItems: "center",
+        width: 70,
+        height: 70,
+        backgroundColor: "blue",
+        margin: 10,
+        borderRadius: 35,
+    },
+    tutorialButtonText: {
+        fontSize: 20,
+        color: "white",
+    },
+    tutorialText: {
+        fontSize: 40,
+        color: "blue"
     }
 });

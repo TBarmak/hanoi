@@ -11,7 +11,7 @@ export default function Home({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity
                 style={{ backgroundColor: "black", width: 200, height: 50, justifyContent: "center", alignItems: "center", margin: 10 }}
-                onPress={() => navigation.navigate("Tutorial")}>
+                onPress={() => navigation.navigate("Game", { tutorial: true, number: 3 })}>
                 <Text style={{ color: "white" }}>Tutorial</Text>
             </TouchableOpacity>
             <TouchableOpacity
