@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing, Image, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Constants from 'expo-constants';
+import Icon from 'react-native-vector-icons/Feather';
 import Pegs from './Pegs'
 import Stopwatch from './Stopwatch';
 import BackButton from './BackButton';
@@ -270,9 +271,18 @@ export default function Game({ route, navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <BackButton navigation={navigation} />
-                {useTimer ? stopwatchRunning || time > 0 ? <Stopwatch running={stopwatchRunning} setTime={setTime} time={time} /> : <Text>Time: 0:00.00</Text> : null}
-                {countMoves ? <Text>Moves: {numMoves}</Text> : null}
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <BackButton navigation={navigation} />
+                    {useTimer ? stopwatchRunning || time > 0 ? <Stopwatch running={stopwatchRunning} setTime={setTime} time={time} /> : <Text>Time: 0:00.00</Text> : null}
+                    {countMoves ? <Text>Moves: {numMoves}</Text> : null}
+                </View>
+                {tutorialIndex < 0 ? <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={{ backgroundColor: "blue", borderRadius: 20, padding: 10, marginHorizontal: 10 }}>
+                    <Icon
+                        name="settings"
+                        size={20}
+                        color="#fff"
+                    />
+                </TouchableOpacity> : null}
             </View>
 
             {tutorialIndex >= 0 && tutorialIndex < boxes.length - 1 ? <View style={{ position: "absolute", top: 0, left: 0 }}>
@@ -329,12 +339,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     header: {
+        width: "100%",
         zIndex: 2,
         position: "absolute",
         top: Constants.statusBarHeight,
-        left: 0, flexDirection: "row",
+        left: 0,
+        flexDirection: "row",
         alignItems: "center",
-        justifyContent: "flex-start"
+        justifyContent: "space-between"
     },
     windowView: {
         zIndex: 1,
