@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
@@ -15,6 +15,30 @@ export default function Achievements({ navigation }) {
     useEffect(() => {
         getBests()
     }, [])
+
+    function alertClear() {
+        Alert.alert(
+            "Are you sure you want to clear your achievements?",
+            "This cannot be undone.",
+            [
+                {
+                    text: "Cancel"
+                },
+                {
+                    text: "Yes",
+                    onPress: () => clearAchievements()
+                }
+            ],
+            { cancelable: false }
+        )
+    }
+
+    async function clearAchievements() {
+        for (let i = 3; i < 21; i++) {
+            await AsyncStorage.removeItem('best' + i)
+        }
+        getBests()
+    }
 
     async function getBests() {
         let bestList = []
@@ -38,7 +62,7 @@ export default function Achievements({ navigation }) {
                 </View>
                 <View style={styles.scoresContainer}>
                     <View style={styles.scoreContainer}>
-                        <Text style={{...styles.scoreText, color: item.data !== null && item.data[0] === Math.pow(2, item.id) - 1 ? "#0F0" : "black"}}>{item.data === null ? "" : item.data[0]}</Text>
+                        <Text style={{ ...styles.scoreText, color: item.data !== null && item.data[0] === Math.pow(2, item.id) - 1 ? "#0F0" : "black" }}>{item.data === null ? "" : item.data[0]}</Text>
                     </View>
                     <View style={styles.scoreContainer}>
                         {time === null ?
@@ -54,6 +78,9 @@ export default function Achievements({ navigation }) {
         <View style={styles.container}>
             <View style={styles.header}>
                 <BackButton navigation={navigation} />
+                <TouchableOpacity onPress={() => alertClear()} style={styles.clearButton}>
+                    <Text style={{ color: "white", padding: 5 }}>Clear</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.flatListContainer}>
                 <View style={styles.rowContainer}>
@@ -87,12 +114,15 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     header: {
-        zIndex: 2,
         position: "absolute",
-        top: Constants.statusBarHeight,
-        left: 0, flexDirection: "row",
+        flexDirection: "row",
         alignItems: "center",
-        justifyContent: "flex-start"
+        justifyContent: "space-between",
+        zIndex: 2,
+        top: Constants.statusBarHeight,
+        left: 0,
+        width: "100%",
+        backgroundColor: "transparent"
     },
     flatListContainer: {
         top: Constants.statusBarHeight,
@@ -132,5 +162,13 @@ const styles = StyleSheet.create({
     scoreText: {
         padding: 10,
         fontSize: 20
+    },
+    clearButton: {
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "blue",
+        width: 80,
+        marginHorizontal: 10,
+        borderRadius: 20
     }
 });
