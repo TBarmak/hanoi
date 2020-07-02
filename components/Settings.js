@@ -22,7 +22,7 @@ export default function Settings({ navigation }) {
             </View>
             <TouchableOpacity
                 style={{ backgroundColor: "black", width: 100, height: 50, justifyContent: "center", alignItems: "center", margin: 10 }}
-                onPress={() => navigation.navigate("Game", { number: number, selected: selected })}>
+                onPress={() => navigation.push("Game", { number: number, selected: selected, tutorial: false })}>
                 <Text style={{ color: "white" }}>Continue to game</Text>
             </TouchableOpacity>
         </View>

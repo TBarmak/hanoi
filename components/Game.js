@@ -36,10 +36,10 @@ export default function Game({ route, navigation }) {
 
     const [best, setBest] = useState([null, null])
 
-    const [boxTop, setBoxTop] = useState(new Animated.Value(50))
-    const [boxLeft, setBoxLeft] = useState(new Animated.Value(50))
-    const [boxWidth, setBoxWidth] = useState(new Animated.Value(50))
-    const [boxHeight, setBoxHeight] = useState(new Animated.Value(50))
+    const [boxTop, setBoxTop] = useState(new Animated.Value(0))
+    const [boxLeft, setBoxLeft] = useState(new Animated.Value(0))
+    const [boxWidth, setBoxWidth] = useState(new Animated.Value(0))
+    const [boxHeight, setBoxHeight] = useState(new Animated.Value(0))
 
     const [tutorialIndex, setTutorialIndex] = useState(-1)
 
@@ -48,26 +48,80 @@ export default function Game({ route, navigation }) {
     useEffect(() => {
         if (tutorial) {
             setTutorialIndex(0)
+        } else {
+            setTutorialIndex(-1)
         }
     }, [tutorial])
 
+    const hideTutorialButtonsIndices = [6, 7, 8, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+
     const tutorialText = [
-        'one',
-        'two',
-        'three',
-        'four',
-        'five',
-        'six'
+        "Welcome to the tutorial!",
+        "This is a puzzle game where you have to move a tower of discs.",
+        "The tower starts on the left peg.",
+        "Solve the puzzle by moving the entire tower to one of the other pegs.",
+        "You will move one disc at a time, from one peg to another.",
+        "But, you can't place a disc on top of a disc that is smaller than it.",
+        "Lift a disc by tapping the stack.",
+        "Then drop the disc by tapping on another peg.",
+        "Lift another disc from the stack",
+        "If you try to place the disc on the middle stack, it will flash red",
+        "This is because the disc is bigger than the disc you are trying to place it on.",
+        "Place the disc on the rightmost peg.",
+        "The tutorial will now guide you through the solution to 3 discs.",
+        "Tap on the peg that is highlighted until confetti covers the screen.",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "Congratulations!",
+        "When you get comfortable with the game, try out the different game modes.",
+        "There is 'Count Moves' where you can try to solve it in the fewest number of moves.",
+        "And 'Timed' where you can try to solve it as fast as possible.",
+        "View your best scores on the 'Achievements' tab in the homescreen.",
+        "You can change your game mode and number of discs in the settings. Good luck!",
+        "",
     ]
 
     // Takes the form [top, left, height, width]
     const boxes = [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
         [pegTop, pegXVals[0] - baseWidth / 2, pegHeight, baseWidth],
-        [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth + pegXVals[2] - pegXVals[1]],
-        [30, 60, 100, 200],
-        [10, 10, 10, 10],
-        [50, 50, 40, 40],
-        [30, 60, 100, 200],
+        [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[0] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[1] - baseWidth / 2, 0, 0],
+        [pegTop, pegXVals[2] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[2] - baseWidth / 2, 0, 0],
+        [0, 0, 0, 0],
+        [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[2] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[0] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[2] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[0] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[2] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[0] - baseWidth / 2, pegHeight, baseWidth],
+        [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth],
+        [0, 0, screenHeight, screenWidth],
+        [0, 0, screenHeight, screenWidth],
+        [0, 0, screenHeight, screenWidth],
+        [0, 0, screenHeight, screenWidth],
+        [0, 0, screenHeight, screenWidth],
+        [Constants.statusBarHeight, screenWidth - 50, 40, 40],
+        [0, 0, screenHeight, screenWidth],
     ]
 
     useEffect(() => {
@@ -175,7 +229,7 @@ export default function Game({ route, navigation }) {
                 disc.position, {
                 toValue: { x: pegXVals[stackIndex] - (disc.width / 2), y: screenHeight * 0.1 },
                 easing: Easing.ease,
-                duration: 100
+                duration: tutorialIndex >= 0 ? 500 : 100
             }
             ).start(() => {
                 setBlocked(false)
@@ -200,7 +254,7 @@ export default function Game({ route, navigation }) {
                 liftedDisc.position, {
                 toValue: { x: pegXVals[stackIndex] - (liftedDisc.width / 2), y: screenHeight * 0.1 },
                 easing: Easing.ease,
-                duration: 100
+                duration: tutorialIndex >= 0 ? 500 : 100
             }
             ).start(() => {
                 let targetY = (topDisc ? parseFloat(JSON.stringify(topDisc.position.getLayout().top)) : baseYVal) - liftedDisc.height
@@ -208,7 +262,7 @@ export default function Game({ route, navigation }) {
                     liftedDisc.position, {
                     toValue: { x: pegXVals[stackIndex] - (liftedDisc.width / 2), y: targetY },
                     easing: Easing.ease,
-                    duration: 100
+                    duration: tutorialIndex >= 0 ? 500 : 100
                 }
                 ).start(() => {
                     setLifted(null)
@@ -276,7 +330,7 @@ export default function Game({ route, navigation }) {
                     {useTimer ? stopwatchRunning || time > 0 ? <Stopwatch running={stopwatchRunning} setTime={setTime} time={time} /> : <Text>Time: 0:00.00</Text> : null}
                     {countMoves ? <Text>Moves: {numMoves}</Text> : null}
                 </View>
-                {tutorialIndex < 0 ? <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={{ backgroundColor: "blue", borderRadius: 20, padding: 10, marginHorizontal: 10 }}>
+                {tutorialIndex < 0 || tutorialIndex > 28 ? <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={{ backgroundColor: "blue", borderRadius: 20, padding: 10, marginHorizontal: 10 }}>
                     <Icon
                         name="settings"
                         size={20}
@@ -292,31 +346,35 @@ export default function Game({ route, navigation }) {
                 <Animated.View style={{ ...styles.windowView, top: Animated.add(boxTop, boxHeight), left: boxLeft, width: screenWidth, height: screenHeight }} />
             </View> : null}
             {tutorialIndex >= 0 && tutorialIndex < boxes.length - 1 ?
-                <View style={{ position: "absolute", zIndex: 2, flexDirection: "column", top: screenHeight * 0.6 }}>
-                    <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <View style={{ zIndex: 2, flexDirection: "column", }}>
+                    <View style={{ justifyContent: "center", alignItems: "center", width: "50%" }}>
                         <Text style={styles.tutorialText}>{tutorialText[tutorialIndex]}</Text>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
-                        {tutorialIndex > 0 ?
-                            <TouchableOpacity onPress={() => setTutorialIndex(index => index - 1)} style={styles.tutorialButton}>
-                                <Text style={styles.tutorialButtonText}>Back</Text>
-                            </TouchableOpacity> : null}
-                        <TouchableOpacity onPress={() => setTutorialIndex(index => index + 1)} style={styles.tutorialButton}>
-                            <Text style={styles.tutorialButtonText}>Okay</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {!hideTutorialButtonsIndices.includes(tutorialIndex) ?
+                        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                            {tutorialIndex > 0 && tutorialIndex < hideTutorialButtonsIndices[0] ?
+                                <TouchableOpacity onPress={() => setTutorialIndex(index => index - 1)} style={styles.tutorialButton}>
+                                    <Text style={styles.tutorialButtonText}>Back</Text>
+                                </TouchableOpacity> : null}
+                            <TouchableOpacity onPress={() => setTutorialIndex(index => index + 1)} style={styles.tutorialButton}>
+                                <Text style={styles.tutorialButtonText}>Okay</Text>
+                            </TouchableOpacity>
+                        </View> : null}
                 </View> : null}
 
             <View style={{ position: "absolute", top: 0, left: 0, zIndex: -1 }}>
                 <Pegs positions={pegXVals} baseWidth={baseWidth} baseHeight={baseHeight} pegHeight={pegHeight} pegTop={pegTop} />
             </View>
-            {won ? <Image source={require('../assets/confetti.gif')} style={{ width: "100%", height: "100%" }} /> : null}
+            {won ? <Image source={require('../assets/confetti.gif')} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} /> : null}
             {renderDiscs()}
             {pegXVals.map((pegX, index) => {
                 return <TouchableOpacity
                     style={{ position: "absolute", width: baseWidth, height: pegHeight, top: pegTop, left: pegX - (baseWidth / 2), backgroundColor: redFlash === index ? "red" : "transparent", opacity: 0.4, borderRadius: baseHeight / 4 }}
                     onPress={() => {
                         if (!blocked) {
+                            if (tutorialIndex >= 0) {
+                                setTutorialIndex(index => index + 1)
+                            }
                             if (lifted === null) {
                                 setBlocked(true)
                                 lift(index)
@@ -368,7 +426,7 @@ const styles = StyleSheet.create({
         color: "white",
     },
     tutorialText: {
-        fontSize: 40,
+        fontSize: 25,
         color: "blue"
     }
 });
