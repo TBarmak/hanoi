@@ -77,10 +77,10 @@ export default function Achievements({ navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <BackButton navigation={navigation} />
                 <TouchableOpacity onPress={() => alertClear()} style={styles.clearButton}>
                     <Text style={{ color: "white", padding: 5 }}>Clear</Text>
                 </TouchableOpacity>
+                <BackButton navigation={navigation} />
             </View>
             <View style={styles.flatListContainer}>
                 <View style={styles.rowContainer}>
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
     header: {
         position: "absolute",
-        flexDirection: "row",
+        flexDirection: "row-reverse",
         alignItems: "center",
         justifyContent: "space-between",
         zIndex: 2,
