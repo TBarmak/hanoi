@@ -62,7 +62,7 @@ export default function Achievements({ navigation }) {
                 </View>
                 <View style={styles.scoresContainer}>
                     <View style={styles.scoreContainer}>
-                        <Text style={{ ...styles.scoreText, color: item.data !== null && item.data[0] === Math.pow(2, item.id) - 1 ? "#0F0" : "black" }}>{item.data === null ? "" : item.data[0]}</Text>
+                        <Text style={{ ...styles.scoreText, color: item.data !== null && item.data[0] === Math.pow(2, item.id) - 1 ? "#0F0" : "white" }}>{item.data === null ? "" : item.data[0]}</Text>
                     </View>
                     <View style={styles.scoreContainer}>
                         {time === null ?
@@ -85,7 +85,7 @@ export default function Achievements({ navigation }) {
             <View style={styles.flatListContainer}>
                 <View style={styles.rowContainer}>
                     <View style={styles.numberCell}>
-                        <Text style={styles.numberText}>#</Text>
+                        <Text style={styles.numberText}># of Discs</Text>
                     </View>
                     <View style={styles.scoresContainer}>
                         <View style={styles.scoreContainer}>
@@ -127,12 +127,13 @@ const styles = StyleSheet.create({
     flatListContainer: {
         top: Constants.statusBarHeight,
         height: screenHeight - 2 * Constants.statusBarHeight,
-        borderWidth: 2,
-        borderColor: "black"
+        backgroundColor: "#3399FF",
+        borderRadius: 20
     },
     rowContainer: {
         flexDirection: "row",
         justifyContent: "flex-start",
+        alignItems: "center",
         height: 50,
         width: "100%"
     },
@@ -140,16 +141,18 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-end",
         borderWidth: 2,
-        borderColor: "black",
-        width: 50
+        borderColor: "#FFF",
+        width: 150
     },
     numberText: {
         padding: 10,
-        fontSize: 20
+        fontSize: 20,
+        color: "#FFF",
+        fontWeight: "bold"
     },
     scoresContainer: {
         borderWidth: 2,
-        borderColor: "black",
+        borderColor: "#FFF",
         flexDirection: "row",
         justifyContent: "space-between",
         width: screenWidth * 0.5
@@ -157,16 +160,20 @@ const styles = StyleSheet.create({
     scoreContainer: {
         justifyContent: "center",
         alignItems: "center",
-        width: "50%"
+        width: "50%",
+        borderColor: "#FFF",
+        borderLeftWidth: 4
     },
     scoreText: {
         padding: 10,
-        fontSize: 20
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#FFF"
     },
     clearButton: {
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "blue",
+        backgroundColor: "#3399FF",
         width: 80,
         marginHorizontal: 10,
         borderRadius: 20

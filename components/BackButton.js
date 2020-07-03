@@ -19,7 +19,7 @@ export default function BackButton(props) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "blue",
+        backgroundColor: "#3399FF",
         borderRadius: 20,
         padding: 10,
         marginHorizontal: 10

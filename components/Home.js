@@ -1,23 +1,37 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Dimensions, Image } from 'react-native';
+import { Video } from 'expo-av';
+
+const dim = Dimensions.get('window')
+const screenWidth = Math.round(Math.max(dim.width, dim.height));
+const screenHeight = Math.round(Math.min(dim.width, dim.height));
 
 export default function Home({ navigation }) {
     return (
         <View style={styles.container}>
+            <Video
+                source={require('../assets/home.mp4')}
+                rate={1.0}
+                isMuted={true}
+                resizeMode="cover"
+                shouldPlay
+                isLooping
+                style={{ position: "absolute", width: "80%", height: "80%"}}
+            />
             <TouchableOpacity
-                style={{ backgroundColor: "black", width: 200, height: 50, justifyContent: "center", alignItems: "center", margin: 10 }}
+                style={styles.navButton}
                 onPress={() => navigation.navigate("Settings")}>
-                <Text style={{ color: "white" }}>Play</Text>
+                <Text style={styles.navText}>Play</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={{ backgroundColor: "black", width: 200, height: 50, justifyContent: "center", alignItems: "center", margin: 10 }}
+                style={styles.navButton}
                 onPress={() => navigation.navigate("Game", { tutorial: true, number: 3 })}>
-                <Text style={{ color: "white" }}>Tutorial</Text>
+                <Text style={styles.navText}>Tutorial</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={{ backgroundColor: "black", width: 200, height: 50, justifyContent: "center", alignItems: "center", margin: 10 }}
+                style={styles.navButton}
                 onPress={() => navigation.navigate("Achievements")}>
-                <Text style={{ color: "white" }}>Achievements</Text>
+                <Text style={styles.navText}>Achievements</Text>
             </TouchableOpacity>
         </View>
     );
@@ -30,8 +44,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    peg: {
-        position: "absolute",
-        backgroundColor: "brown",
+    navButton: {
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#3399FF",
+        width: screenWidth * 0.4,
+        height: screenHeight / 6,
+        margin: 10,
+        borderRadius: screenHeight / 12,
+        zIndex: 1
+    },
+    navText: {
+        color: "white",
+        fontSize: screenHeight / 15,
+        fontFamily: 'sans-serif-light'
     }
 });

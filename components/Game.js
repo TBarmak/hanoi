@@ -64,8 +64,8 @@ export default function Game({ route, navigation }) {
         "But, you can't place a disc on top of a disc that is smaller than it.",
         "Lift a disc by tapping the stack.",
         "Then drop the disc by tapping on another peg.",
-        "Lift another disc from the stack",
-        "If you try to place the disc on the middle stack, it will flash red",
+        "Lift another disc from the stack.",
+        "If you try to place the disc on the middle peg, it will flash red.",
         "This is because the disc is bigger than the disc you are trying to place it on.",
         "Place the disc on the rightmost peg.",
         "The tutorial will now guide you through the solution to 3 discs.",
@@ -332,7 +332,7 @@ export default function Game({ route, navigation }) {
                         {countMoves ? <Text>Moves: {numMoves}</Text> : null}
                     </View>
                 </View>
-                {tutorialIndex < 0 || tutorialIndex > 28 ? <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={{ backgroundColor: "blue", borderRadius: 20, padding: 10, marginHorizontal: 10 }}>
+                {tutorialIndex < 0 || tutorialIndex > 28 ? <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={{ backgroundColor: "#3399FF", borderRadius: 20, padding: 10, marginHorizontal: 10 }}>
                     <Icon
                         name="settings"
                         size={20}
@@ -348,9 +348,9 @@ export default function Game({ route, navigation }) {
                 <Animated.View style={{ ...styles.windowView, top: Animated.add(boxTop, boxHeight), left: boxLeft, width: screenWidth, height: screenHeight }} />
             </View> : null}
             {tutorialIndex >= 0 && tutorialIndex < boxes.length - 1 ?
-                <View style={{ zIndex: 2, flexDirection: "column", }}>
-                    <View style={{ justifyContent: "center", alignItems: "center", width: "50%" }}>
-                        <Text style={styles.tutorialText}>{tutorialText[tutorialIndex]}</Text>
+                <View style={{ position: "absolute", left: "5%", top: Constants.statusBarHeight, width: "90%", zIndex: 2, flexDirection: "row" }}>
+                    <View style={{ justifyContent: "center", alignItems: "center", width: "70%" }}>
+                        <Text style={{ color: tutorialIndex < 24 || tutorialIndex == 29 ? "#FFF" : "#3399FF", fontSize: 25 }}>{tutorialText[tutorialIndex]}</Text>
                     </View>
                     {!hideTutorialButtonsIndices.includes(tutorialIndex) ?
                         <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
@@ -411,24 +411,20 @@ const styles = StyleSheet.create({
     windowView: {
         zIndex: 1,
         position: "absolute",
-        backgroundColor: "#333",
-        opacity: 0.4
+        backgroundColor: "#222",
+        opacity: 0.6
     },
     tutorialButton: {
         justifyContent: "center",
         alignItems: "center",
-        width: 70,
-        height: 70,
-        backgroundColor: "blue",
-        margin: 10,
-        borderRadius: 35,
+        backgroundColor: "#3399FF",
+        width: 100,
+        height: 60,
+        borderRadius: 50,
+        marginHorizontal: 10
     },
     tutorialButtonText: {
-        fontSize: 20,
-        color: "white",
-    },
-    tutorialText: {
-        fontSize: 25,
-        color: "blue"
+        color: "#FFF",
+        fontSize: 25
     }
 });

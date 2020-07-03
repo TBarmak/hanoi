@@ -16,14 +16,14 @@ export default function Settings({ navigation }) {
             <View style={styles.header}>
                 <BackButton navigation={navigation} />
             </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }}>
                 <NumberPicker number={number} setNumber={setNumber} />
                 <RadioButtons options={options} selected={selected} setSelected={setSelected} />
             </View>
             <TouchableOpacity
-                style={{ backgroundColor: "black", width: 100, height: 50, justifyContent: "center", alignItems: "center", margin: 10 }}
+                style={styles.continueButton}
                 onPress={() => navigation.push("Game", { number: number, selected: selected, tutorial: false })}>
-                <Text style={{ color: "white" }}>Continue to game</Text>
+                <Text style={styles.continueButtonText}>Continue</Text>
             </TouchableOpacity>
         </View>
     );
@@ -40,8 +40,23 @@ const styles = StyleSheet.create({
         zIndex: 2,
         position: "absolute",
         top: Constants.statusBarHeight,
-        left: 0, flexDirection: "row",
+        left: 0,
+        flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-start"
+    },
+    continueButton: {
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#3399FF",
+        width: 150,
+        height: 60,
+        margin: 10,
+        borderRadius: 30
+    },
+    continueButtonText: {
+        fontSize: 20,
+        padding: 20,
+        color: "#FFF"
     }
 });
