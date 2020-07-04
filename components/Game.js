@@ -3,6 +3,7 @@ import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing, Image
 import AsyncStorage from '@react-native-community/async-storage';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/Feather';
+import { AdMobBanner } from 'expo-ads-admob';
 import Pegs from './Pegs'
 import Stopwatch from './Stopwatch';
 import BackButton from './BackButton';
@@ -409,6 +410,11 @@ export default function Game({ route, navigation }) {
                         }
                     }} />
             })}
+            {tutorialIndex < 0 ? <AdMobBanner
+                bannerSize="smartBanner"
+                adUnitID={Constants.manifest.extra.googleMobileAdsUnitId}
+                servePersonalizedAds
+            /> : null}
         </View>
     );
 }
@@ -418,7 +424,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
     },
     header: {
         width: "100%",

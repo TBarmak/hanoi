@@ -24,6 +24,15 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": ""
+    "android": {
+      "config": {
+        "googleMobileAdsAppId": ""
+      },
+      "permissions": []
+    },
+    "description": "",
+    "extra": {
+      "googleMobileAdsUnitId": ""
+    }
   }
 }
