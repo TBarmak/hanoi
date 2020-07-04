@@ -1,11 +1,33 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
+const dim = Dimensions.get('window')
+const screenWidth = Math.round(Math.max(dim.width, dim.height));
+const screenHeight = Math.round(Math.min(dim.width, dim.height));
+
+const baseDiscWidth = screenWidth / 4
+const stackHeight = screenHeight / 3
+const colors = ["#FF0000", "#FF6500", "#FFA500", "#FFFF00", "#ADFF2F", "#32CD32", "#008000", "#0000FF", "#4B0082", "#EE82EE"]
+
 export default function NumberPicker(props) {
+    function createDiscs(numDiscs) {
+        let nums = []
+        for(let i = 0; i < numDiscs; i++) {
+            nums.push(i)
+        }
+        return nums.map((num) => {
+            return(
+                <View style={{height: stackHeight / numDiscs, width: baseDiscWidth * ((numDiscs - (3 * num / 4)) / (numDiscs + 1)), borderRadius: stackHeight/numDiscs, backgroundColor: colors[num % colors.length]}}/>
+            )
+        })
+    }
+
     return (
         <View style={styles.container}>
-            <Text style={{ fontSize: 80 }}>{props.number}</Text>
+            <View style={{flexDirection: "column-reverse", justifyContent: "center", alignItems: "center", margin: 10}}>
+                {createDiscs(props.number)}
+            </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                 {props.number > 3 ? <TouchableOpacity onPress={() => props.setNumber(props.number - 1)} style={{ ...styles.button, backgroundColor: "red" }}>
                     <Icon
