@@ -13,10 +13,10 @@ export default function Home({ navigation }) {
                 source={require('../assets/home.mp4')}
                 rate={1.0}
                 isMuted={true}
-                resizeMode="cover"
+                resizeMode="contain"
                 shouldPlay
                 isLooping
-                style={{ position: "absolute", width: "80%", height: "80%"}}
+                style={{ position: "absolute", width: "80%", height: "80%" }}
             />
             <TouchableOpacity
                 style={styles.navButton}

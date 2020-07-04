@@ -27,6 +27,7 @@ export default function NumberPicker(props) {
         <View style={styles.container}>
             <View style={styles.discContainer}>
                 {createDiscs(props.number)}
+                <Text style={{ position: "absolute", zIndex: 1, fontSize: 40, color: "#FFF" }}>{props.number}</Text>
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                 {props.number > 3 ? <TouchableOpacity onPress={() => props.setNumber(props.number - 1)} style={{ ...styles.button, backgroundColor: "#D72638" }}>

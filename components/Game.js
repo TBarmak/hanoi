@@ -350,8 +350,8 @@ export default function Game({ route, navigation }) {
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <BackButton navigation={navigation} />
                     <View style={{ marginHorizontal: 10 }}>
-                        {useTimer ? stopwatchRunning || time > 0 ? <Stopwatch running={stopwatchRunning} setTime={setTime} time={time} /> : <Text>Time: 0:00.00</Text> : null}
-                        {countMoves ? <Text>Moves: {numMoves}</Text> : null}
+                        {useTimer ? stopwatchRunning || time > 0 ? <Stopwatch running={stopwatchRunning} setTime={setTime} time={time} /> : <Text style={{ color: "#3399FF", fontSize: 20 }}>Time: 0:00.00</Text> : null}
+                        {countMoves ? <Text style={{ color: "#3399FF", fontSize: 20 }}>Moves: {numMoves}</Text> : null}
                     </View>
                 </View>
                 {tutorialIndex < 0 || tutorialIndex > 28 ? <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={{ backgroundColor: "#3399FF", borderRadius: 20, padding: 10, marginHorizontal: 10 }}>

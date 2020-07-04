@@ -27,7 +27,7 @@ export default function Stopwatch(props) {
 
     return (
         <View style={styles.container}>
-            <Text>Time: {Math.floor(props.time / 6000)}:{Math.floor((props.time % 6000) / 100).toString().padStart(2, "0")}.{(props.time % 100).toString().padStart(2, "0")}</Text>
+            <Text style={{ color: "#3399FF", fontSize: 20 }}>Time: {Math.floor(props.time / 6000)}:{Math.floor((props.time % 6000) / 100).toString().padStart(2, "0")}.{(props.time % 100).toString().padStart(2, "0")}</Text>
         </View>
     );
 }
