@@ -13,30 +13,30 @@ const colors = ["#FF0000", "#FF6500", "#FFA500", "#FFFF00", "#ADFF2F", "#32CD32"
 export default function NumberPicker(props) {
     function createDiscs(numDiscs) {
         let nums = []
-        for(let i = 0; i < numDiscs; i++) {
+        for (let i = 0; i < numDiscs; i++) {
             nums.push(i)
         }
         return nums.map((num) => {
-            return(
-                <View style={{height: stackHeight / numDiscs, width: baseDiscWidth * ((numDiscs - (3 * num / 4)) / (numDiscs + 1)), borderRadius: stackHeight/numDiscs, backgroundColor: colors[num % colors.length]}}/>
+            return (
+                <View style={{ height: stackHeight / numDiscs, width: baseDiscWidth * ((numDiscs - (3 * num / 4)) / (numDiscs + 1)), borderRadius: stackHeight / numDiscs, backgroundColor: colors[num % colors.length] }} />
             )
         })
     }
 
     return (
         <View style={styles.container}>
-            <View style={{flexDirection: "column-reverse", justifyContent: "center", alignItems: "center", margin: 10}}>
+            <View style={styles.discContainer}>
                 {createDiscs(props.number)}
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                {props.number > 3 ? <TouchableOpacity onPress={() => props.setNumber(props.number - 1)} style={{ ...styles.button, backgroundColor: "red" }}>
+                {props.number > 3 ? <TouchableOpacity onPress={() => props.setNumber(props.number - 1)} style={{ ...styles.button, backgroundColor: "#D72638" }}>
                     <Icon
                         name="minus"
                         size={20}
                         color="#fff"
                     />
                 </TouchableOpacity> : null}
-                {props.number < 20 ? <TouchableOpacity onPress={() => props.setNumber(props.number + 1)} style={{ ...styles.button, backgroundColor: "green" }}>
+                {props.number < 20 ? <TouchableOpacity onPress={() => props.setNumber(props.number + 1)} style={{ ...styles.button, backgroundColor: "#20BF55" }}>
                     <Icon
                         name="plus"
                         size={20}
@@ -62,5 +62,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginHorizontal: 30
+    },
+    discContainer: {
+        flexDirection: "column-reverse",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: 10
     }
 });

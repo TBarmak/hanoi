@@ -10,10 +10,10 @@ export default function RadioButtons(props) {
         <View style={styles.container}>
             {props.options.map((option, index) => {
                 return (
-                    <View style={styles.buttonContainer}>
-                        <Text style={{ fontSize: 20 }}>{option}</Text>
-                        <TouchableOpacity style={{ ...styles.circle, backgroundColor: index === props.selected ? "#3399FF" : "transparent" }} onPress={() => props.setSelected(index)} />
-                    </View>
+                    <TouchableOpacity style={styles.buttonContainer} onPress={() => props.setSelected(index)}>
+                        <Text style={styles.buttonText}>{option}</Text>
+                        <View style={{ ...styles.circle, backgroundColor: index === props.selected ? "#20BF55" : "#FFF" }} />
+                    </TouchableOpacity>
                 )
             })}
         </View>
@@ -30,8 +30,16 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        margin: 15,
-        width: 200
+        height: screenHeight / 6,
+        width: 3 * screenWidth / 7,
+        margin: 5,
+        backgroundColor: "#3399FF",
+        borderRadius: screenHeight / 12
+    },
+    buttonText: {
+        fontSize: 20,
+        color: "#FFF",
+        padding: 20
     },
     circle: {
         width: 40,
@@ -39,7 +47,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 20,
         borderWidth: 2,
-        borderColor: "#3399FF"
+        borderColor: "#fff",
+        margin: 10
     },
     checkedCircle: {
         width: "100%",

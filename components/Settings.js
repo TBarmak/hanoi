@@ -16,7 +16,7 @@ export default function Settings({ navigation }) {
             <View style={styles.header}>
                 <BackButton navigation={navigation} />
             </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", margin: "5%" }}>
                 <NumberPicker number={number} setNumber={setNumber} />
                 <RadioButtons options={options} selected={selected} setSelected={setSelected} />
             </View>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
     },
     header: {
         zIndex: 2,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#3399FF",
         width: 150,
         height: 60,
-        margin: 10,
+        margin: 20,
         borderRadius: 30
     },
     continueButtonText: {
