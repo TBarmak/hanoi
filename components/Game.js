@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing, Image, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Animated, TouchableOpacity, Easing, Image, Text, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/Feather';
@@ -96,15 +96,15 @@ export default function Game({ route, navigation }) {
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
-        [0, 0, 0, 0],
+        [pegTop + (pegHeight / 2), pegXVals[0], 0, 0],
         [pegTop, pegXVals[0] - baseWidth / 2, pegHeight, baseWidth],
         [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth],
         [pegTop, pegXVals[0] - baseWidth / 2, pegHeight, baseWidth],
         [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth],
-        [pegTop, pegXVals[1] - baseWidth / 2, 0, 0],
+        [pegTop + (pegHeight / 2), pegXVals[1], 0, 0],
         [pegTop, pegXVals[2] - baseWidth / 2, pegHeight, baseWidth],
-        [pegTop, pegXVals[2] - baseWidth / 2, 0, 0],
-        [0, 0, 0, 0],
+        [pegTop + (pegHeight / 2), pegXVals[2], 0, 0],
+        [pegTop + (pegHeight / 2), pegXVals[1], 0, 0],
         [pegTop, pegXVals[1] - baseWidth / 2, pegHeight, baseWidth],
         [pegTop, pegXVals[2] - baseWidth / 2, pegHeight, baseWidth],
         [pegTop, pegXVals[0] - baseWidth / 2, pegHeight, baseWidth],
@@ -180,6 +180,12 @@ export default function Game({ route, navigation }) {
     useEffect(() => {
         setBestInStorage()
     }, [best])
+
+    useEffect(() => {
+        if (won && tutorialIndex < 0) {
+            alertSolved()
+        }
+    }, [won])
 
     function createDiscs() {
         /*
@@ -322,6 +328,22 @@ export default function Game({ route, navigation }) {
         }
     }
 
+    function alertSolved() {
+        /*
+        alertSolved() will alert the winner that they have solved the puzzle.
+        */
+        Alert.alert(
+            "Congratulations!",
+            "Go to the settings to start a new game.",
+            [
+                {
+                    text: "Okay"
+                }
+            ],
+            { cancelable: false }
+        )
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -426,5 +448,11 @@ const styles = StyleSheet.create({
     tutorialButtonText: {
         color: "#FFF",
         fontSize: 25
+    },
+    congatsText: {
+        zIndex: 2,
+        fontSize: 40,
+        color: "#3399FF",
+        padding: 100
     }
 });
