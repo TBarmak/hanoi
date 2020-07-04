@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import BackButton from './BackButton';
+import GLOBALS from '../Globals'
+
 
 const dim = Dimensions.get('window')
 const screenWidth = Math.round(Math.max(dim.width, dim.height));
@@ -34,7 +36,7 @@ export default function Achievements({ navigation }) {
     }
 
     async function clearAchievements() {
-        for (let i = 3; i < 21; i++) {
+        for (let i = 3; i < GLOBALS.MAX_DISCS; i++) {
             await AsyncStorage.removeItem('best' + i)
         }
         getBests()
@@ -42,7 +44,7 @@ export default function Achievements({ navigation }) {
 
     async function getBests() {
         let bestList = []
-        for (let i = 3; i < 21; i++) {
+        for (let i = 3; i <= GLOBALS.MAX_DISCS; i++) {
             const value = await AsyncStorage.getItem('best' + i)
             let asJSON = JSON.parse(value)
             bestList.push({ id: i, data: asJSON })

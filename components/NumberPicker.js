@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import GLOBALS from '../Globals';
 
 const dim = Dimensions.get('window')
 const screenWidth = Math.round(Math.max(dim.width, dim.height));
@@ -30,14 +31,14 @@ export default function NumberPicker(props) {
                 <Text style={{ position: "absolute", zIndex: 1, fontSize: 40, color: "#FFF" }}>{props.number}</Text>
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                {props.number > 3 ? <TouchableOpacity onPress={() => props.setNumber(props.number - 1)} style={{ ...styles.button, backgroundColor: "#D72638" }}>
+                {props.number > GLOBALS.MIN_DISCS ? <TouchableOpacity onPress={() => props.setNumber(props.number - 1)} style={{ ...styles.button, backgroundColor: "#D72638" }}>
                     <Icon
                         name="minus"
                         size={20}
                         color="#fff"
                     />
                 </TouchableOpacity> : null}
-                {props.number < 20 ? <TouchableOpacity onPress={() => props.setNumber(props.number + 1)} style={{ ...styles.button, backgroundColor: "#20BF55" }}>
+                {props.number < GLOBALS.MAX_DISCS ? <TouchableOpacity onPress={() => props.setNumber(props.number + 1)} style={{ ...styles.button, backgroundColor: "#20BF55" }}>
                     <Icon
                         name="plus"
                         size={20}
