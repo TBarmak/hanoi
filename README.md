@@ -7,6 +7,8 @@ The goal of the game is to move the tower of discs from one peg to another. You 
 
 You can choose how many discs you want in your tower. Challenge yourself to solve it using the fewest number of moves possible, or try to solve the puzzle as fast as possible. View your achievements for each number of discs.
 
+<a href="https://play.google.com/store/apps/details?id=com.tbarmak.hanoi&hl=en_US">Google Play Listing</a>
+
 <p float="left">
   <img src="/screenshots/home.jpg" width="500" height="250"/>
   <img src="/screenshots/settings.jpg" width="500" height="250"/>
